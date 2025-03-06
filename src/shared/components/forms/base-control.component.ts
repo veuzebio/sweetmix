@@ -1,8 +1,18 @@
-import { AbstractControl, ControlValueAccessor, ValidationErrors, Validator } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NgControl,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
+import { distinctUntilChanged, EMPTY, Observable, startWith, tap } from 'rxjs';
 
 export abstract class BaseControl implements ControlValueAccessor, Validator {
   value: any;
-  touched = false;
+  errors: ValidationErrors | null = null;
+  touched: boolean | null = null;
+  dirty: boolean | null = null;
+  ngControl: NgControl | null = null;
 
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
@@ -33,7 +43,24 @@ export abstract class BaseControl implements ControlValueAccessor, Validator {
     return null;
   }
 
-  registerOnValidatorChange?(fn: () => void): void {  
+  registerOnValidatorChange?(fn: () => void): void {
     this.onValidatorChange = fn;
+  }
+
+  handleStatusChanges(): Observable<void> {
+    if (!this.ngControl) {
+      return EMPTY;
+    }
+
+    this.errors = this.ngControl!.errors; 
+    
+    return this.ngControl!.statusChanges!.pipe(
+      distinctUntilChanged(),
+      tap(() => {
+        this.errors = this.ngControl!.errors;
+        this.touched = this.ngControl!.touched;
+        this.dirty = this.ngControl!.dirty;
+      })
+    );
   }
 }

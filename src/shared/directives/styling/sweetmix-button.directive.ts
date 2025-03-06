@@ -9,9 +9,9 @@ const BUTTON_CLASS = [
   'font-medium',
   'rounded-lg',
   'text-sm',
-  'sm:w-auto',
-  'px-3',
-  'py-2',
+  'p-3',
+  'w-fit',	
+  'h-fit',	
   'text-center',
 ];
 

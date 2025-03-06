@@ -1,1 +1,1 @@
-export * from './sweetmix-input.component';
+export * from './sweetmix-input/sweetmix-input.component';

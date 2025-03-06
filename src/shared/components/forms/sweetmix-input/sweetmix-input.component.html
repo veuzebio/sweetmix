@@ -1,0 +1,21 @@
+<div class="relative z-0 pb-6 w-full group">
+  <input
+    #inputRef
+    type="text"
+    name="input"
+    placeholder=" "
+    swInput
+    [hasError]="hasError"
+    [value]="value"
+    (input)="onInputChange($event)"
+  />
+  <label for="input" swLabel [hasError]="hasError">
+    {{ label() }}
+  </label>
+
+  @if (hasError) {
+  <span class="absolute top-11 left-0 text-xs text-red-500">
+    {{ errorMessage() }}
+  </span>
+  }
+</div>

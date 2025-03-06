@@ -1,32 +1,31 @@
 <form [formGroup]="form" class="mx-auto max-w-7xl mt-16 px-10 grid grid-cols-10 gap-4">
   <h1 class="col-span-10 text-3xl">Fórmula</h1>
-  <sw-input class="col-span-2" label="Código" formControlName="codigo" name="codigo" errorMessage="Insira o código da fórmula." #codigoRef />
+  <sw-input class="col-span-2" label="Código" formControlName="codigo" name="codigo" errorMessage="Campo obrigatório." #codigoRef />
   <sw-input class="col-span-8" label="Nome" formControlName="nome" name="nome" />
 
-  <div
-    formArrayName="ingredientes"
+  <div 
+    formArrayName="ingredientes" 
     class="col-span-10 p-4 rounded-md outline-1 outline-gray-300 mt-10"
   >
-    <h2 class="text-xl">Ingredientes</h2>
+    <h2 class="text-xl mb-5">Ingredientes</h2>
 
     @for (ingrediente of ingredientes.controls; let i = $index; track $index) {
-      <div [formGroupName]="i" class="grid grid-cols-10 gap-4 my-4">
-        <sw-input class="col-span-2" label="Código" formControlName="codigo" name="codigo" />
-        <sw-input class="col-span-8" label="Nome" formControlName="nome" name="nome" />
+      <div [formGroupName]="i" class="grid grid-cols-10 gap-4 my-2">
+        <sw-input class="col-span-2" label="Código" formControlName="ingredienteCodigo" name="ingredienteCodigo" errorMessage="Campo obrigatório." />
+        <sw-input class="col-span-7" label="Nome" formControlName="ingredienteNome" name="ingredienteNome" />
 
         @if ($last) {
           <button swButton class="col-span-1" type="button" (click)="adicionarIngrediente()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            Adicionar
           </button>
         }
       </div>
     }
 
   </div>
-
-  <button swButton class="col-span-2" type="button" (click)="limpar(); codigoRef.focus()">Limpar</button>
-  <button swButton class="col-span-2 col-start-9" type="button" (click)="cadastrar(); codigoRef.focus()">Cadastrar</button>
+  <div class="col-span-10 flex justify-end gap-4">
+    <button swButton type="button" (click)="limpar(); codigoRef.focus()">Limpar</button>
+    <button swButton type="button" (click)="cadastrar(); codigoRef.focus()">Cadastrar</button>
+  </div>
 </form>
 
