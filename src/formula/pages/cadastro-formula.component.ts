@@ -1,78 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
 
-import { SweetmixInputComponent } from '@shared/components';
-import { SweetmixButtonDirective } from '@shared/directives';
 import { Formula } from '@shared/models';
 import { FormulaService } from '@shared/services';
-import * as helper from '@shared/helpers';
+
+import { FormularioCadastroComponent } from '../components';
 
 @Component({
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
     CommonModule,
-    SweetmixInputComponent,
-    SweetmixButtonDirective,
-  ],
+    FormularioCadastroComponent
+],
   templateUrl: 'cadastro-formula.component.html',
   styleUrl: 'cadastro-formula.component.css',
 })
 export class CadastroFormulaComponent {
   private formulaService = inject(FormulaService);
-  private fb = inject(FormBuilder);
+  mensagem = signal('');
 
-  form = this.fb.group({
-    codigo: [null, Validators.required],
-    nome: [null],
-    ingredientes: this.fb.array([this.criarElemento()]),
-  });
-
-  get ingredientes() {
-    return this.form.get('ingredientes') as FormArray;
-  }
-
-  criarElemento(): FormGroup {
-    return this.fb.group({
-      ingredienteCodigo: [null, Validators.required],
-      ingredienteNome: [null],
+  cadastrar(formula: Formula): void {
+    this.formulaService.cadastrarNovaFormula(formula).subscribe({
+      next: (valor) => {
+        console.log('Formula cadastrada com sucesso!', valor);
+        this.mensagem.set('Formula cadastrada com sucesso!');
+      },
+      error: (erro) => {
+        console.error('Erro ao cadastrar formula!', erro);
+        this.mensagem.set('Erro ao cadastrar formula!');
+      },
     });
   }
-
-  adicionarIngrediente(): void {
-    this.ingredientes.push(this.criarElemento());
-  }
-
-  limpar(): void {
-    this.form.reset();
-  }
-
-  cadastrar(): void {
-    if (this.form.invalid) {
-      helper.markAllAsTouched(this.form);
-      return;
-    }
-
-    const formula: Formula = {
-      codigo: this.form.value.codigo!,
-      nome: this.form.value.nome || null,
-      ingredientes: this.form.value.ingredientes!,
-    };
-
-    // this.formulaService
-    //   .cadastrarNovaFormula(this.form.value as Formula)
-    //   .subscribe({
-    //     next: (valor) => console.log('Formula cadastrada com sucesso', valor),
-    //     error: (erro) => console.error('Erro ao cadastrar formula', erro),
-    //   });
-  }
-
 }
