@@ -1,0 +1,1 @@
+export * from './painel-aviso/painel-aviso.component';

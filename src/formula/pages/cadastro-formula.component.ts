@@ -5,6 +5,7 @@ import { Formula } from '@shared/models';
 import { FormulaService } from '@shared/services';
 
 import { FormularioCadastroComponent } from '../components';
+import { AvisoService } from '@shared/services/aviso.service';
 
 @Component({
   imports: [
@@ -16,17 +17,17 @@ import { FormularioCadastroComponent } from '../components';
 })
 export class CadastroFormulaComponent {
   private formulaService = inject(FormulaService);
-  mensagem = signal('');
-
+  private avisoService = inject(AvisoService);
+  
   cadastrar(formula: Formula): void {
     this.formulaService.cadastrarNovaFormula(formula).subscribe({
       next: (valor) => {
         console.log('Formula cadastrada com sucesso!', valor);
-        this.mensagem.set('Formula cadastrada com sucesso!');
+        this.avisoService.sucesso('Formula cadastrada com sucesso!');
       },
       error: (erro) => {
         console.error('Erro ao cadastrar formula!', erro);
-        this.mensagem.set('Erro ao cadastrar formula!');
+        this.avisoService.sucesso('Erro ao cadastrar formula!');
       },
     });
   }

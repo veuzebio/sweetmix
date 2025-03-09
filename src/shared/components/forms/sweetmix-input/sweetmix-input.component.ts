@@ -61,7 +61,6 @@ export class SweetmixInputComponent extends BaseControl implements OnInit, OnDes
   }
 
   focus(): void {
-    console.log('focando no input');
     this.inputRef()?.nativeElement.focus();    
   }
 }
