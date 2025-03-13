@@ -1,0 +1,21 @@
+
+
+@if (this.formulas.value().length > 0) {
+  <h1 class="text-3xl">Lista de fórmulas cadastradas</h1>
+
+  <div class="mt-15 mb-5">
+    <sw-input label="Filtrar por código" [(ngModel)]="filtro" />
+  </div>
+  
+  <div class="mb-15">
+    <for-tabela-formulas
+      [formulas]="formulas.value()"
+      [filtro]="filtro()"
+      (editarAcionado)="editar($event)"
+      (excluirAcionado)="excluir($event)"
+    />
+  </div>
+} @else {
+  <h1 class="text-3xl">Nenhuma fórmula cadastrada...</h1>
+}
+

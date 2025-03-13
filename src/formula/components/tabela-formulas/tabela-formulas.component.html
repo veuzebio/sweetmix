@@ -1,0 +1,36 @@
+<table class="min-w-full">
+  @if (this.formulas().length > 0) {
+    <thead>
+      <tr>
+        <th class="border border-gray-300 px-4 py-2 text-blue-600">Código</th>
+        <th class="border border-gray-300 px-4 py-2 text-blue-600">Nome</th>
+        <th class="border border-gray-300 px-4 py-2 text-blue-600">Qtd. de Ingredientes</th>
+        <th class="border border-gray-300 px-4 py-2 text-blue-600">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (formula of formulas() | filtrarPorTermo: filtro(); track formula.id) {
+          <tr>
+          <td class="border border-gray-300 px-4 py-2">{{ formula.codigo }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ formula.nome }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-center">
+              {{ formula.ingredientes.length }}
+          </td>
+          <td class="border border-gray-300 px-4 py-2 text-center">
+              <button (click)="editarAcionado.emit(formula)" class="text-blue-500 hover:underline">
+              Editar
+              </button>
+              <button
+              (click)="excluirAcionado.emit(formula)"
+              class="text-red-500 hover:underline ml-2"
+              >
+              Excluir
+              </button>
+          </td>
+          </tr>
+      }
+    </tbody>
+  } @else {
+    <div class="text-center">Nenhuma fórmula cadastrada...</div>
+  }
+</table>

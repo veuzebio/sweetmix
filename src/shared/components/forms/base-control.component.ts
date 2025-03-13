@@ -12,6 +12,7 @@ export abstract class BaseControl implements ControlValueAccessor, Validator {
   errors: ValidationErrors | null = null;
   touched: boolean | null = null;
   dirty: boolean | null = null;
+  disabled: boolean | null = null;
   ngControl: NgControl | null = null;
 
   onChange: (value: any) => void = () => {};
@@ -30,7 +31,9 @@ export abstract class BaseControl implements ControlValueAccessor, Validator {
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;    
+  }
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;

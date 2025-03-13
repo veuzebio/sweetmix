@@ -1,13 +1,17 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Formula, ValidacaoModelo } from '@shared/models';
 import { Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FormulaService {
+  private API_URI = 'http://localhost:3000/formulas';
   private http = inject(HttpClient);
 
-  formulas$ = this.http.get<Formula[]>('http://localhost:3000/formulas');
+  filtro = signal<string>('');
+  idSelecionado = signal<string | null>(null);
+  formulasResource = httpResource<Formula[]>(() => `${this.API_URI}`, { defaultValue: []});
+  formulaSelecionadaResource = httpResource<Formula | null>(() => `${this.API_URI}/${this.idSelecionado()}`, { defaultValue: null });
 
   validarFormula(formula: Formula): ValidacaoModelo {
     const {codigo, ingredientes} = formula;
@@ -39,5 +43,19 @@ export class FormulaService {
     }
 
     return this.http.post<Formula>('http://localhost:3000/formulas', formula);
+  }
+
+  excluirFormula(formula: Formula) {
+    return this.http.delete<Formula>(`${this.API_URI}/${formula.id}`);
+  }
+
+  private obterFormulas(filtro?: string) {
+    const params = new URLSearchParams();
+    
+    if (!!filtro) {
+      params.append('codigo_like', filtro);
+    }
+
+    return `${this.API_URI}?${params.toString()}`;
   }
 }

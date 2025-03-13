@@ -1,5 +1,4 @@
-<form [formGroup]="form" class="mx-auto max-w-7xl mt-16 px-10 grid grid-cols-10 gap-4">
-  <h1 class="col-span-10 text-3xl">Fórmula</h1>
+<form [formGroup]="form" class="grid grid-cols-10 gap-4">
   <sw-input class="col-span-2" label="Código" formControlName="codigo" name="codigo" errorMessage="Campo obrigatório." #codigoRef />
   <sw-input class="col-span-8" label="Nome" formControlName="nome" name="nome" (keydown.enter)="adicionarIngrediente()" />
 
@@ -22,8 +21,13 @@
     <button swButton class="col-span-1" type="button" (click)="adicionarIngrediente()">Adicionar</button>
   </div>
   <div class="col-span-10 flex justify-end gap-4">
-    <button swButton color="red" type="button" tabindex="-1" (click)="limpar(); codigoRef.focus()">Limpar</button>
-    <button swButton type="button" (click)="cadastrar(); codigoRef.focus()">Cadastrar</button>
+    @if (editando()) {
+      <button swButton type="button" tabindex="-1" (click)="voltar()">Voltar</button>
+      <button swButton type="button" (click)="cadastrar(); voltar()">Salvar</button>
+    } @else {
+      <button swButton color="red" type="button" tabindex="-1" (click)="limpar(); codigoRef.focus()">Limpar</button>
+      <button swButton type="button" (click)="cadastrar(); codigoRef.focus()">Cadastrar</button>
+    }
   </div>
 </form>
 

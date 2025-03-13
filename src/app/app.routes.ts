@@ -7,10 +7,24 @@ export const routes: Routes = [
   //   pathMatch: 'full',
   // },
   {
-    path: 'cadastro-formula',
+    path: 'cadastro',
     loadComponent: () =>
-      import('../formula/pages/cadastro-formula.component').then(
+      import('../formula/pages/cadastro-formula/cadastro-formula.component').then(
         (m) => m.CadastroFormulaComponent
+      ),
+  },
+  {
+    path: 'cadastro/:formulaId',
+    loadComponent: () =>
+      import('../formula/pages/cadastro-formula/cadastro-formula.component').then(
+        (m) => m.CadastroFormulaComponent
+      ),
+  },
+  {
+    path: 'listagem',
+    loadComponent: () =>
+      import('../formula/pages/listagem/listagem.component').then(
+        (m) => m.ListagemComponent
       ),
   },
 ];

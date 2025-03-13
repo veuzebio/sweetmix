@@ -24,12 +24,21 @@ const INPUT_CLASS_ERROR = [
   'focus:border-red-600',
 ];
 
+const INPUT_CLASS_DISABLED = [
+  ...INPUT_CLASS,
+  'hover:cursor-not-allowed',
+  'border-none',
+];
+
 @Directive({ selector: 'input[swInput]' })
 export class SweetmixInputDirective {
   hasError = input(false, { transform: booleanAttribute });
+  disabled = input(false, { transform: booleanAttribute });
 
   @HostBinding('class')
   get classes(): string[] {
-    return this.hasError() ? INPUT_CLASS_ERROR : INPUT_CLASS;
+    if (this.disabled()) return INPUT_CLASS_DISABLED;
+    if (this.hasError()) return INPUT_CLASS_ERROR;
+    return  INPUT_CLASS;
   }
 }

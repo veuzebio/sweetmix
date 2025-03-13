@@ -27,13 +27,12 @@ import { BaseControl } from '../base-control.component';
   ],
 })
 export class SweetmixInputComponent extends BaseControl implements OnInit, OnDestroy {
-  private controlContainer = inject(ControlContainer);
+  private controlContainer = inject(ControlContainer, { optional: true });
   private inputRef = viewChild<ElementRef<HTMLInputElement>>('inputRef');
   private subs = new Subscription();
 
-  focusOnInit = input(false, { transform: booleanAttribute });
   label = input.required<string>();
-  name = input.required<string>();
+  formControlName = input<string>('');
   errorMessage = input<string>('Valor inválido.');
   
  
@@ -42,12 +41,10 @@ export class SweetmixInputComponent extends BaseControl implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-    if (this.focusOnInit()) {
-      this.focus();
-    }
-    
+    if (!this.formControlName().length) return;
+    if (!this.controlContainer) return;
 
-    this.ngControl = this.controlContainer.control?.get(this.name()) as unknown as NgControl;
+    this.ngControl = this.controlContainer?.control?.get(this.formControlName()) as unknown as NgControl;
 
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;

@@ -1,35 +1,21 @@
 {
   "formulas": [
     {
-      "codigo": "SVM0000"
-    },
-    {
-      "id": "e053",
-      "codigo": "cod1",
-      "nome": "formula codigo 1",
+      "id": "a869",
+      "codigo": "SMV0000",
+      "nome": "Formula SMV0000",
       "ingredientes": [
         {
-          "codigo": "cod1",
-          "nome": "ingrediente codigo 1"
+          "codigo": "ING1",
+          "nome": "Ingrediente 1"
         },
         {
-          "codigo": "cod2",
-          "nome": "ingrediente codigo 2"
+          "codigo": "ING2",
+          "nome": "Ingrediente 2"
         },
         {
-          "codigo": "cod3",
-          "nome": "ingrediente codigo 3"
-        }
-      ]
-    },
-    {
-      "id": "86a1",
-      "codigo": "ertertret",
-      "nome": null,
-      "ingredientes": [
-        {
-          "codigo": "eretertret",
-          "nome": ""
+          "codigo": "ING3",
+          "nome": "Ingrediente 3"
         }
       ]
     }

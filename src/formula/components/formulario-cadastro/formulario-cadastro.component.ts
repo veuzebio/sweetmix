@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, input, model, OnInit, output, signal } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -15,6 +16,8 @@ import { SweetmixInputComponent } from '@shared/components';
 import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
 import * as helper from '@shared/helpers';
 import { Formula } from '@shared/models';
+
+type tipoFormulario = 'cadastro' | 'edicao';
 
 function ingredientesValidator(control: AbstractControl): ValidationErrors | null {
   const ingredientesArray = control as FormArray;
@@ -44,10 +47,15 @@ function ingredientesValidator(control: AbstractControl): ValidationErrors | nul
   templateUrl: 'formulario-cadastro.component.html',
   styleUrl: 'formulario-cadastro.component.css',
 })
-export class FormularioCadastroComponent {
+export class FormularioCadastroComponent implements OnInit {
   private fb = inject(FormBuilder);
 
-  formulaCadastrada = output<Formula>();
+  tipo = signal<tipoFormulario>('cadastro');
+  editando = computed(() => this.tipo() === 'edicao');
+  formulaSelecionada = model<Formula | undefined>();
+
+  cadastrarAcionado = output<Formula>();
+  voltarAcionado = output<void>();
 
   form = this.fb.group({
     codigo: ['', Validators.required],
@@ -55,19 +63,31 @@ export class FormularioCadastroComponent {
     ingredientes: this.fb.array([], ingredientesValidator),
   });
 
+  get codigo() {
+    return this.form.get('codigo') as FormControl;
+  }
+
   get ingredientes() {
     return this.form.get('ingredientes') as FormArray;
   }
 
-  criarElemento(): FormGroup {
+  ngOnInit(): void {
+    if (this.formulaSelecionada()) {
+      console.log('formulaSelecionada', this.formulaSelecionada());
+      
+      this.iniciarEdicao(this.formulaSelecionada()!);
+    }
+  }
+
+  criarElemento(codigo: string = '', nome: string = ''): FormGroup {
     return this.fb.group({
-      codigo: ['', Validators.required],
-      nome: [''],
+      codigo: [codigo, Validators.required],
+      nome: [nome],
     });
   }
 
-  adicionarIngrediente(): void {
-    this.ingredientes.push(this.criarElemento());
+  adicionarIngrediente(codigo: string = '', nome: string = ''): void {
+    this.ingredientes.push(this.criarElemento(codigo, nome));
   }
 
   removerIngrediente(indice: number): void {
@@ -80,6 +100,10 @@ export class FormularioCadastroComponent {
     if (confirm('Deseja realmente limpar o formulário?')) {
       this.reiniciarFormulario();
     }
+  }
+
+  voltar(): void {
+    this.voltarAcionado.emit();
   }
 
   cadastrar(): void {
@@ -96,7 +120,7 @@ export class FormularioCadastroComponent {
       ingredientes: this.form.value.ingredientes!,
     };
 
-    this.formulaCadastrada.emit(formula as Formula);
+    this.cadastrarAcionado.emit(formula as Formula);
     this.reiniciarFormulario();
   }
 
@@ -122,5 +146,14 @@ export class FormularioCadastroComponent {
   private reiniciarFormulario(): void {
     this.form.reset();
     this.ingredientes.clear();
+  }
+
+  private iniciarEdicao(formula: Formula) {
+    this.tipo.set('edicao');
+    this.codigo.disable();
+    this.form.patchValue(formula!);
+    formula!.ingredientes.forEach(ingrediente => {
+      this.adicionarIngrediente(ingrediente.codigo, ingrediente.nome || '');
+    });
   }
 }
