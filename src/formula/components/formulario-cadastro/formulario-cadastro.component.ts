@@ -1,38 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, model, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, Input, output, signal } from '@angular/core';
 import {
-  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
+import { v4 as uuid } from 'uuid'
 
 import { SweetmixInputComponent } from '@shared/components';
 import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
 import * as helper from '@shared/helpers';
-import { Formula } from '@shared/models';
+import { Formula, Ingrediente } from '@shared/models';
 
-type tipoFormulario = 'cadastro' | 'edicao';
-
-function ingredientesValidator(control: AbstractControl): ValidationErrors | null {
-  const ingredientesArray = control as FormArray;
-
-  if (ingredientesArray.length <= 0) {
-    return { required: true };
-  }
-
-
-  if (!ingredientesArray.controls.some((item) => item.get('codigo')?.value?.trim() !== '')) {
-    return { ingredienteInvalido: true };
-  }
-
-  return null;
-}
+import { FormulaSalva, TipoFormulario } from '../../models';
+import { ingredientesValidator } from './validators';
 
 @Component({
   selector: 'for-formulario-cadastro',
@@ -47,17 +32,30 @@ function ingredientesValidator(control: AbstractControl): ValidationErrors | nul
   templateUrl: 'formulario-cadastro.component.html',
   styleUrl: 'formulario-cadastro.component.css',
 })
-export class FormularioCadastroComponent implements OnInit {
+export class FormularioCadastroComponent {
   private fb = inject(FormBuilder);
+  private formulaEdicao: Formula | null = null;
+  
+  @Input()
+  public get formula(): Formula | null {
+    return this.formulaEdicao;
+  }
+  public set formula(valor: Formula | null) {
+    this.formulaEdicao = valor;
 
-  tipo = signal<tipoFormulario>('cadastro');
+    if (this.formulaEdicao) {
+      this.iniciarEdicao(this.formulaEdicao);
+    }
+  }
+
+  tipo = signal<TipoFormulario>('cadastro');
   editando = computed(() => this.tipo() === 'edicao');
-  formulaSelecionada = model<Formula | undefined>();
 
-  cadastrarAcionado = output<Formula>();
+  salvarAcionado = output<FormulaSalva>();
   voltarAcionado = output<void>();
 
   form = this.fb.group({
+    id: [uuid()],
     codigo: ['', Validators.required],
     nome: [''],
     ingredientes: this.fb.array([], ingredientesValidator),
@@ -69,14 +67,6 @@ export class FormularioCadastroComponent implements OnInit {
 
   get ingredientes() {
     return this.form.get('ingredientes') as FormArray;
-  }
-
-  ngOnInit(): void {
-    if (this.formulaSelecionada()) {
-      console.log('formulaSelecionada', this.formulaSelecionada());
-      
-      this.iniciarEdicao(this.formulaSelecionada()!);
-    }
   }
 
   criarElemento(codigo: string = '', nome: string = ''): FormGroup {
@@ -114,13 +104,21 @@ export class FormularioCadastroComponent implements OnInit {
       return;
     }
 
-    const formula = {
-      codigo: this.form.value.codigo!,
-      nome: this.form.value.nome || null,
-      ingredientes: this.form.value.ingredientes!,
+    const valoresFormulario = this.form.getRawValue();
+
+    const formula: Formula = {
+      id: valoresFormulario.id!,
+      codigo: valoresFormulario.codigo!,
+      nome: valoresFormulario.nome || null,
+      ingredientes: valoresFormulario.ingredientes! as Ingrediente[],
     };
 
-    this.cadastrarAcionado.emit(formula as Formula);
+    const evento: FormulaSalva = {
+      formula,
+      tipo: this.tipo(),
+    };
+
+    this.salvarAcionado.emit(evento);
     this.reiniciarFormulario();
   }
 

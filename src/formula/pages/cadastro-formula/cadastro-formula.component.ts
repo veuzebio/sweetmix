@@ -1,54 +1,53 @@
 import { CommonModule, Location } from '@angular/common';
-import {
-  Component,
-  inject,
-  input,
-  OnInit,
-  effect,
-  computed,
-} from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 
 import { Formula } from '@shared/models';
 import { FormulaService } from '@shared/services';
 import { AvisoService } from '@shared/services/aviso.service';
 
+import { Observable } from 'rxjs';
 import { FormularioCadastroComponent } from '../../components';
+import { FormulaSalva } from '../../models';
 
 @Component({
   imports: [CommonModule, FormularioCadastroComponent],
   templateUrl: 'cadastro-formula.component.html',
   styleUrl: 'cadastro-formula.component.css',
 })
-export class CadastroFormulaComponent {
+export class CadastroFormulaComponent implements OnInit {
   private formulaService = inject(FormulaService);
   private avisoService = inject(AvisoService);
   private location = inject(Location);
 
   formulaId = input<string>('');
-  formulaSelecionada = this.formulaService.formulaSelecionadaResource.value();
+  formulaSelecionada$!: Observable<Formula | null>;
 
-  constructor() {
-    effect(() => {      
-      if (!this.formulaId()) return;
+  ngOnInit(): void {
+    if (!this.formulaId()) return;
 
-      this.formulaService.idSelecionado.set(this.formulaId());
-    });
+    this.formulaSelecionada$ = this.formulaService.obterFormulaPorId(this.formulaId());
   }
 
   voltar(): void {
     this.location.back();
   }
 
-  cadastrar(formula: Formula): void {
-    this.formulaService.cadastrarNovaFormula(formula).subscribe({
-      next: (valor) => {
-        console.log('Formula cadastrada com sucesso!', valor);
-        this.avisoService.sucesso('Formula cadastrada com sucesso!');
-      },
-      error: (erro) => {
-        console.error('Erro ao cadastrar formula!', erro);
-        this.avisoService.sucesso('Erro ao cadastrar formula!');
-      },
-    });
+  salvar(evento: FormulaSalva): void {
+    const { formula, tipo } = evento;
+
+    if (tipo === 'cadastro') {
+      this.formulaService.cadastrarNovaFormula(formula).subscribe({
+        next: () =>
+          this.avisoService.sucesso('Formula cadastrada com sucesso!'),
+        error: () =>
+          this.avisoService.sucesso('Erro ao cadastrar formula!'),
+      });
+    } else if (tipo === 'edicao') {
+      this.formulaService.atualizarFormula(formula).subscribe({
+        next: () =>
+          this.avisoService.sucesso('Formula editada com sucesso!'),
+        error: () => this.avisoService.sucesso('Erro ao editar formula!'),
+      });
+    }
   }
 }

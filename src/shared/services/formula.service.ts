@@ -8,54 +8,23 @@ export class FormulaService {
   private API_URI = 'http://localhost:3000/formulas';
   private http = inject(HttpClient);
 
-  filtro = signal<string>('');
-  idSelecionado = signal<string | null>(null);
-  formulasResource = httpResource<Formula[]>(() => `${this.API_URI}`, { defaultValue: []});
-  formulaSelecionadaResource = httpResource<Formula | null>(() => `${this.API_URI}/${this.idSelecionado()}`, { defaultValue: null });
+  obterFormulas(): Observable<Formula[]> {
+    return this.http.get<Formula[]>(this.API_URI);
+  }
 
-  validarFormula(formula: Formula): ValidacaoModelo {
-    const {codigo, ingredientes} = formula;
-    const codigoIngredientes = ingredientes.map((ingrediente) => ingrediente.codigo);
-
-    const validacao: ValidacaoModelo = {
-      valido: true,
-      observacoes: [],
-    };
-
-    if (!codigo) {
-      validacao.valido = false;
-      validacao.observacoes.push('Formula deve ter um código.');
-    }
-
-    if (codigoIngredientes.length < 1) {
-      validacao.valido = false;
-      validacao.observacoes.push('Formula deve ter pelo menos um ingrediente.');
-    }
-
-    return validacao;
+  obterFormulaPorId(id: string): Observable<Formula> {
+    return this.http.get<Formula>(`${this.API_URI}/${id}`);
   }
 
   cadastrarNovaFormula(formula: Formula): Observable<Formula> {
-    const validacao = this.validarFormula(formula);
+    return this.http.post<Formula>(this.API_URI, formula);
+  }
 
-    if (validacao.valido === false) {
-      return throwError(() => validacao.observacoes.join(', '));
-    }
-
-    return this.http.post<Formula>('http://localhost:3000/formulas', formula);
+  atualizarFormula(formula: Formula): Observable<Formula> {
+    return this.http.put<Formula>(`${this.API_URI}/${formula.id}`, formula);
   }
 
   excluirFormula(formula: Formula) {
     return this.http.delete<Formula>(`${this.API_URI}/${formula.id}`);
-  }
-
-  private obterFormulas(filtro?: string) {
-    const params = new URLSearchParams();
-    
-    if (!!filtro) {
-      params.append('codigo_like', filtro);
-    }
-
-    return `${this.API_URI}?${params.toString()}`;
   }
 }

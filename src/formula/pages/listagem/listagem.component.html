@@ -1,6 +1,6 @@
 
 
-@if (this.formulas.value().length > 0) {
+@if (formulas$ | async; as formulas) {
   <h1 class="text-3xl">Lista de fórmulas cadastradas</h1>
 
   <div class="mt-15 mb-5">
@@ -9,7 +9,7 @@
   
   <div class="mb-15">
     <for-tabela-formulas
-      [formulas]="formulas.value()"
+      [formulas]="formulas"
       [filtro]="filtro()"
       (editarAcionado)="editar($event)"
       (excluirAcionado)="excluir($event)"

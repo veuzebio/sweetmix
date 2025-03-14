@@ -1,7 +1,7 @@
 <h1 class="text-3xl mb-5">Cadastro de fórmula</h1>
 
 <for-formulario-cadastro
-  [formulaSelecionada]="formulaSelecionada"
-  (cadastrarAcionado)="cadastrar($event)"
+  [formula]="formulaSelecionada$ | async"
+  (salvarAcionado)="salvar($event)"
   (voltarAcionado)="voltar()"
 />
