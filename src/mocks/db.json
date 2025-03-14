@@ -1,36 +1,35 @@
 {
   "formulas": [
     {
-      "id": "a869",
-      "codigo": "SMV0000",
-      "nome": "Formula X",
+      "id": "c9bcbff7-45d2-494e-a159-c70e1da81526",
+      "codigo": "FOR1",
+      "nome": "Formula 1",
       "ingredientes": [
+        {
+          "codigo": "ING0",
+          "nome": "Ingrediente 0"
+        },
         {
           "codigo": "ING1",
           "nome": "Ingrediente 1"
-        },
-        {
-          "codigo": "ING2",
-          "nome": "Ingrediente 2"
-        },
-        {
-          "codigo": "ING3",
-          "nome": "Ingrediente 3"
-        },
-        {
-          "codigo": "ING4",
-          "nome": "Ingrediente 4"
-        },
-        {
-          "codigo": "ING5",
-          "nome": "Ingrediente 5"
         }
       ]
     },
     {
-      "id": "f84a2ced-33af-4a77-8a53-4d8c65227dbe",
-      "codigo": "SMV0001",
-      "nome": "Formula Y",
+      "id": "061df234-edb5-4a91-bfae-6381d360cfd6",
+      "codigo": "FOR2",
+      "nome": "Formula 2",
+      "ingredientes": [
+        {
+          "codigo": "ING4",
+          "nome": "Ingrediente 4"
+        }
+      ]
+    },
+    {
+      "id": "ecdd6e79-6830-4a9b-89c2-d21038512dd4",
+      "codigo": "FOR3",
+      "nome": "Formula 3",
       "ingredientes": [
         {
           "codigo": "ING0",
