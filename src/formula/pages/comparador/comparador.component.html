@@ -1,0 +1,35 @@
+<h1 class="text-3xl mb-5">Comparador de formulas</h1>
+
+<form [formGroup]="form">
+  <div formArrayName="codigos" class="mt-15 mb-5 px-4 pb-4 pt-6 rounded-md outline-1 outline-gray-300">
+    @for (codigo of codigos.controls; let i = $index; track codigo) {
+      <div class="flex gap-x-8">
+        <sw-input swAutoFocus class="flex-1" label="Código" formControlName="{{ i }}" (keydown.enter)="adicionarCodigo()" />
+        
+        @if (codigos.controls.length > 1) {
+          <button swButton color="red" type="button" tabindex="-1" (click)="removerCodigo(i)" >Remover</button>
+        }
+      </div>
+    }
+    <button swButton type="button" (click)="adicionarCodigo()">Adicionar</button>
+  </div>
+</form>
+
+<div class="flex justify-end gap-4">
+  <button swButton type="button" (click)="buscar()">Buscar</button>
+</div>
+
+@if (formulasEncontradas().length > 0) {
+  <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
+    <h2>Formulas encontradas</h2>
+    <ul>
+      @for (formula of formulasEncontradas(); track formula.id) {
+        <li>{{ formula.codigo }} - {{ formula.nome }}</li>
+      }
+    </ul>
+  </section>
+
+  <div class="flex justify-end gap-4">
+    <button swButton type="button" (click)="comparar()">Comparar</button>
+  </div>
+}

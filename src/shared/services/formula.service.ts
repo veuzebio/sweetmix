@@ -1,7 +1,7 @@
 import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Formula, ValidacaoModelo } from '@shared/models';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FormulaService {
@@ -14,6 +14,16 @@ export class FormulaService {
 
   obterFormulaPorId(id: string): Observable<Formula> {
     return this.http.get<Formula>(`${this.API_URI}/${id}`);
+  }
+
+  obterFormulasPorCodigos(codigos: string[]): Observable<Formula[]> {
+    if (codigos.length === 0) return of([]);
+    
+    const params = new URLSearchParams();
+
+    codigos.forEach((codigo) => params.append('codigo', codigo));
+
+    return this.http.get<Formula[]>(`${this.API_URI}?${params.toString()}`);
   }
 
   cadastrarNovaFormula(formula: Formula): Observable<Formula> {

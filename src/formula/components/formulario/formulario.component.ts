@@ -126,7 +126,7 @@ export class FormularioComponent {
   }
 
   private reiniciarFormulario(): void {
-    this.form.reset();
+    this.form.reset({ id: uuid() });
     this.ingredientes.clear();
   }
 

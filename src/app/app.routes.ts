@@ -27,4 +27,11 @@ export const routes: Routes = [
         (m) => m.ListagemComponent
       ),
   },
+  {
+    path: 'comparador',
+    loadComponent: () =>
+      import('../formula/pages/comparador/comparador.component').then(
+        (m) => m.ComparadorComponent
+      ),
+  },
 ];
