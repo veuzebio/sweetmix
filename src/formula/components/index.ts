@@ -1,2 +1,2 @@
-export * from './formulario-cadastro/formulario-cadastro.component';
+export * from './formulario/formulario.component';
 export * from './tabela-formulas/tabela-formulas.component';

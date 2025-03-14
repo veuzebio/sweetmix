@@ -26,6 +26,17 @@
           "nome": "Ingrediente 5"
         }
       ]
+    },
+    {
+      "id": "f84a2ced-33af-4a77-8a53-4d8c65227dbe",
+      "codigo": "SMV0001",
+      "nome": "Formula 0001",
+      "ingredientes": [
+        {
+          "codigo": "ING0",
+          "nome": "Ingrediente 0"
+        }
+      ]
     }
   ]
 }

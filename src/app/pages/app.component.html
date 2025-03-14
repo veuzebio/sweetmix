@@ -1,5 +1,5 @@
 <app-painel-aviso />
-<nav class="fixed top-0 z-10 w-full bg-white border-b border-gray-200">
+<nav class="w-full bg-white border-b border-gray-200">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
@@ -8,8 +8,8 @@
                 </div>
                 <div class="block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a routerLink="/cadastro" class="text-gray-900 hover:bg-gray-50 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Cadastro</a>
-                        <a routerLink="/listagem" class="text-gray-900 hover:bg-gray-50 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Listagem</a>
+                        <a routerLink="/listagem" routerLinkActive="text-blue-600" class="hover:text-blue-600 px-3 py-2 text-sm font-medium">Listagem</a>
+                        <a routerLink="/cadastro" routerLinkActive="text-blue-600" class="hover:text-blue-600 px-3 py-2 text-sm font-medium">Cadastro</a>
                     </div>
                 </div>
             </div>
@@ -17,6 +17,6 @@
     </div>
 </nav>
 
-<div class="mx-auto max-w-7xl mt-24 px-10">
+<div class="mx-auto max-w-7xl mt-10 px-10">
     <router-outlet />
 </div>

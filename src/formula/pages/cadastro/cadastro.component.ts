@@ -6,15 +6,14 @@ import { FormulaService } from '@shared/services';
 import { AvisoService } from '@shared/services/aviso.service';
 
 import { Observable } from 'rxjs';
-import { FormularioCadastroComponent } from '../../components';
+import { FormularioComponent } from '../../components';
 import { FormulaSalva } from '../../models';
 
 @Component({
-  imports: [CommonModule, FormularioCadastroComponent],
-  templateUrl: 'cadastro-formula.component.html',
-  styleUrl: 'cadastro-formula.component.css',
+  imports: [CommonModule, FormularioComponent],
+  templateUrl: 'cadastro.component.html',
 })
-export class CadastroFormulaComponent implements OnInit {
+export class CadastroComponent implements OnInit {
   private formulaService = inject(FormulaService);
   private avisoService = inject(AvisoService);
   private location = inject(Location);

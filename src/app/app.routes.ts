@@ -1,23 +1,23 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: 'cadastro-formula',
-  //   pathMatch: 'full',
-  // },
+  {
+    path: '',
+    redirectTo: 'listagem',
+    pathMatch: 'full',
+  },
   {
     path: 'cadastro',
     loadComponent: () =>
-      import('../formula/pages/cadastro-formula/cadastro-formula.component').then(
-        (m) => m.CadastroFormulaComponent
+      import('../formula/pages/cadastro/cadastro.component').then(
+        (m) => m.CadastroComponent
       ),
   },
   {
     path: 'cadastro/:formulaId',
     loadComponent: () =>
-      import('../formula/pages/cadastro-formula/cadastro-formula.component').then(
-        (m) => m.CadastroFormulaComponent
+      import('../formula/pages/cadastro/cadastro.component').then(
+        (m) => m.CadastroComponent
       ),
   },
   {

@@ -13,14 +13,14 @@ import { v4 as uuid } from 'uuid'
 
 import { SweetmixInputComponent } from '@shared/components';
 import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
-import * as helper from '@shared/helpers';
 import { Formula, Ingrediente } from '@shared/models';
+import * as helper from '@shared/helpers';
 
 import { FormulaSalva, TipoFormulario } from '../../models';
 import { ingredientesValidator } from './validators';
 
 @Component({
-  selector: 'for-formulario-cadastro',
+  selector: 'for-formulario',
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -29,10 +29,10 @@ import { ingredientesValidator } from './validators';
     SweetmixButtonDirective,
     AutoFocusDirective
   ],
-  templateUrl: 'formulario-cadastro.component.html',
-  styleUrl: 'formulario-cadastro.component.css',
+  templateUrl: 'formulario.component.html',
+  styleUrl: 'formulario.component.css',
 })
-export class FormularioCadastroComponent {
+export class FormularioComponent {
   private fb = inject(FormBuilder);
   private formulaEdicao: Formula | null = null;
   
@@ -61,12 +61,17 @@ export class FormularioCadastroComponent {
     ingredientes: this.fb.array([], ingredientesValidator),
   });
 
-  get codigo() {
+  get codigo(): FormControl {
     return this.form.get('codigo') as FormControl;
   }
 
-  get ingredientes() {
+  get ingredientes(): FormArray {
     return this.form.get('ingredientes') as FormArray;
+  }
+
+  get ingredientesInvalidos(): boolean {
+    const erroDetectado = Object.keys(this.ingredientes.errors ?? {}).length > 0
+    return erroDetectado && this.form.touched;
   }
 
   criarElemento(codigo: string = '', nome: string = ''): FormGroup {
@@ -97,8 +102,6 @@ export class FormularioCadastroComponent {
   }
 
   cadastrar(): void {
-    this.validarIngredientes();
-
     if (this.form.invalid) {      
       helper.markAllAsTouched(this.form);
       return;
@@ -122,31 +125,12 @@ export class FormularioCadastroComponent {
     this.reiniciarFormulario();
   }
 
-  private validarIngredientes(): void {
-    if (Object.keys(this.ingredientes.errors ?? {}).length > 0) {
-      alert('Por favor, preencha o código de um ingrediente.');
-      return;
-    }
-
-    this.removerIngredientesSemCodigo();
-  }
-
-  private removerIngredientesSemCodigo(): void {
-    for (let i = this.ingredientes.length - 1; i >= 0; i--) {
-      const codigo = this.ingredientes.at(i).get('codigo')?.value;
-
-      if (!codigo) {
-        this.ingredientes.removeAt(i);
-      }
-    }
-  }
-
   private reiniciarFormulario(): void {
     this.form.reset();
     this.ingredientes.clear();
   }
 
-  private iniciarEdicao(formula: Formula) {
+  private iniciarEdicao(formula: Formula): void {
     this.tipo.set('edicao');
     this.codigo.disable();
     this.form.patchValue(formula!);
