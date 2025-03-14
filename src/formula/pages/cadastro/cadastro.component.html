@@ -1,4 +1,4 @@
-<h1 class="text-3xl mb-5">Cadastro de fórmula</h1>
+<h1 class="text-3xl mb-5">{{ formulaId() ? 'Editar fórmula' : 'Cadastrar nova fórmula'}}</h1>
 
 <for-formulario
   [formula]="formulaSelecionada$ | async"
