@@ -28,10 +28,10 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'comparador',
+    path: 'analise-compatibilidade',
     loadComponent: () =>
-      import('../formula/pages/comparador/comparador.component').then(
-        (m) => m.ComparadorComponent
+      import('../formula/pages/analise-compatibilidade/analise-compatibilidade.component').then(
+        (m) => m.AnaliseCompatibilidadeComponent
       ),
   },
 ];

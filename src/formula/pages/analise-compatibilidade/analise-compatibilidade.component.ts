@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SweetmixInputComponent } from '@shared/components';
 import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
-import { Formula, Relatorio } from '@shared/models';
-import { ComparadorService, FormulaService, RelatorioService } from '@shared/services';
+import { Formula, ResultadoAnalisePar } from '@shared/models';
+import { AnaliseCompatibilidadeService, FormulaService } from '@shared/services';
 
 @Component({
   imports: [
@@ -16,16 +16,15 @@ import { ComparadorService, FormulaService, RelatorioService } from '@shared/ser
     SweetmixButtonDirective,
     AutoFocusDirective
   ],
-  templateUrl: 'comparador.component.html',
+  templateUrl: 'analise-compatibilidade.component.html',
 })
-export class ComparadorComponent implements OnInit {
+export class AnaliseCompatibilidadeComponent implements OnInit {
   private formulaService = inject(FormulaService);
-  private comparadorService = inject(ComparadorService);
-  private relatorioService = inject(RelatorioService);
+  private analiseService = inject(AnaliseCompatibilidadeService);
   private fb = inject(FormBuilder);
 
   formulasEncontradas = signal<Formula[]>([]);
-  relatorios = signal<Relatorio[]>([]);
+  resultados = signal<ResultadoAnalisePar[]>([]);
 
   form = this.fb.group({
     codigos: this.fb.array([this.criarElemento()]),
@@ -63,13 +62,13 @@ export class ComparadorComponent implements OnInit {
       });
   }
 
-  comparar(): void {
-    const relatorios = this.comparadorService.compararFormulas(this.formulasEncontradas());
-    this.relatorios.set(relatorios);
-    console.log('relatorios', relatorios);
+  analisar(): void {
+    const resultados = this.analiseService.analisarFormulas(this.formulasEncontradas());
+    this.resultados.set(resultados);
+    console.log('resultados', resultados);
   }
 
   salvarResultado(): void {
-    this.relatorioService.salvarRelatorios(this.relatorios()).subscribe();
+    this.analiseService.salvarResultadoAnalise(this.resultados()).subscribe();
   }
 }

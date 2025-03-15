@@ -1,6 +1,6 @@
 import { Formula } from "./formula";
 
-export interface Relatorio {
+export interface ResultadoAnalisePar {
   id: string;
   formulasUtilizadas: Map<string, Formula>;
   compatibilidade: boolean;

@@ -1,42 +1,48 @@
 {
   "formulas": [
     {
-      "id": "c9bcbff7-45d2-494e-a159-c70e1da81526",
-      "codigo": "FOR1",
-      "nome": "Formula 1",
+      "id": "654b62a5-7783-4656-a5e5-2b748c9f545c",
+      "codigo": "for1",
+      "nome": "formula 1",
       "ingredientes": [
         {
-          "codigo": "ING0",
-          "nome": "Ingrediente 0"
-        },
-        {
-          "codigo": "ING1",
-          "nome": "Ingrediente 1"
+          "codigo": "ing1",
+          "nome": "ingrediente 1"
         }
       ]
     },
     {
-      "id": "061df234-edb5-4a91-bfae-6381d360cfd6",
-      "codigo": "FOR2",
-      "nome": "Formula 2",
+      "id": "75005c90-24e8-41e9-8743-5e436e9d0e2f",
+      "codigo": "for2",
+      "nome": "formula 2",
       "ingredientes": [
         {
-          "codigo": "ING4",
-          "nome": "Ingrediente 4"
-        }
-      ]
-    },
-    {
-      "id": "ecdd6e79-6830-4a9b-89c2-d21038512dd4",
-      "codigo": "FOR3",
-      "nome": "Formula 3",
-      "ingredientes": [
-        {
-          "codigo": "ING0",
-          "nome": "Ingrediente 0"
+          "codigo": "ing1",
+          "nome": "ingrediente 1"
         }
       ]
     }
   ],
-  "relatorios": []
+  "resultados": [
+    {
+      "id": "941f2265-e745-4841-9108-aeb872bc0106",
+      "codigos": [
+        "for1",
+        "for2"
+      ],
+      "formulas": {},
+      "resultados": [
+        {
+          "id": "a91ceb1b-185e-4b52-b990-62ecd1255b83",
+          "formulasUtilizadas": {},
+          "compatibilidade": true,
+          "ingredientesComuns": [
+            "ing1",
+            "ing1"
+          ],
+          "ingredientesDiferentes": []
+        }
+      ]
+    }
+  ]
 }

@@ -32,6 +32,6 @@ export class ListagemComponent {
   excluir(formula: Formula): void {
     if (!confirm(`Deseja realmente excluir a formula ${formula.codigo}?`)) return;
     
-    this.formulaService.excluirFormula(formula).subscribe();
+    this.formulaService.excluirFormula(formula).subscribe(() => this.formulas$ = this.formulaService.obterFormulas());
   }
 }

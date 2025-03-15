@@ -1,4 +1,4 @@
-<h1 class="text-3xl mb-5">Comparador de formulas</h1>
+<h1 class="text-3xl mb-5">Análise de compatibilidade entre fórmulas</h1>
 
 <form [formGroup]="form">
   <div formArrayName="codigos" class="mt-15 mb-5 px-4 pb-4 pt-6 rounded-md outline-1 outline-gray-300">
@@ -38,27 +38,27 @@
   </section>
 
   <div class="flex justify-end gap-4">
-    <button swButton type="button" (click)="comparar()">Comparar</button>
+    <button swButton type="button" (click)="analisar()">Analisar compatibilidade</button>
   </div>
 }
 
-@if (relatorios().length > 0) {
+@if (resultados().length > 0) {
   <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
     <h2 class="text-xl">Resultado</h2>
-      @for (relatorio of relatorios(); track relatorio.id) {
+      @for (resultado of resultados(); track resultado.id) {
         <div 
           class="mt-4 rounded-md outline-1 outline-green-800"
-          [class.outline-red-800]="!relatorio.compatibilidade"
+          [class.outline-red-800]="!resultado.compatibilidade"
         >
           <h3 
             class="text-lg text-green-800 rounded-t-md bg-green-100 p-4" 
-            [class.text-red-800]="!relatorio.compatibilidade"
-            [class.bg-red-100]="!relatorio.compatibilidade"
+            [class.text-red-800]="!resultado.compatibilidade"
+            [class.bg-red-100]="!resultado.compatibilidade"
           >
-              {{ relatorio.compatibilidade ? "Compatível" : "Incompatível" }}
+              {{ resultado.compatibilidade ? "Compatível" : "Incompatível" }}
           </h3>
           <div class="rounded-md flex gap-4 my-4 p-4">
-              @for (formula of relatorio.formulasUtilizadas.values(); track formula) {
+              @for (formula of resultado.formulasUtilizadas.values(); track formula) {
                 <div class="rounded-md outline-1 outline-gray-300">
                   <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
                   <p class="p-2">{{ formula.nome }}</p>
@@ -66,7 +66,7 @@
                     @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
                       <li 
                         class="p-2 border-t border-gray-300" 
-                        [class.bg-red-100]="relatorio.ingredientesDiferentes.includes(ingrediente.codigo)"
+                        [class.bg-red-100]="resultado.ingredientesDiferentes.includes(ingrediente.codigo)"
                       >
                           {{ ingrediente.codigo }} - {{ ingrediente.nome }}
                       </li>
