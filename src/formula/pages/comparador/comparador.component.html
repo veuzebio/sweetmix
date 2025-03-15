@@ -21,15 +21,65 @@
 
 @if (formulasEncontradas().length > 0) {
   <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
-    <h2>Formulas encontradas</h2>
-    <ul>
+    <h2 class="text-xl">Formulas encontradas</h2>
+    <div class="flex gap-4 my-4">
       @for (formula of formulasEncontradas(); track formula.id) {
-        <li>{{ formula.codigo }} - {{ formula.nome }}</li>
+        <div class="rounded-md outline-1 outline-gray-300">
+          <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
+          <p class="p-2">{{ formula.nome }}</p>
+          <ul>
+            @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
+              <li class="p-2 border-t border-gray-300">{{ ingrediente.codigo }} - {{ ingrediente.nome }}</li>
+            }
+          </ul>
+        </div>
       }
-    </ul>
+    </div>
   </section>
 
   <div class="flex justify-end gap-4">
     <button swButton type="button" (click)="comparar()">Comparar</button>
+  </div>
+}
+
+@if (relatorios().length > 0) {
+  <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
+    <h2 class="text-xl">Resultado</h2>
+      @for (relatorio of relatorios(); track relatorio.id) {
+        <div 
+          class="mt-4 rounded-md outline-1 outline-green-800"
+          [class.outline-red-800]="!relatorio.compatibilidade"
+        >
+          <h3 
+            class="text-lg text-green-800 rounded-t-md bg-green-100 p-4" 
+            [class.text-red-800]="!relatorio.compatibilidade"
+            [class.bg-red-100]="!relatorio.compatibilidade"
+          >
+              {{ relatorio.compatibilidade ? "Compatível" : "Incompatível" }}
+          </h3>
+          <div class="rounded-md flex gap-4 my-4 p-4">
+              @for (formula of relatorio.formulasUtilizadas.values(); track formula) {
+                <div class="rounded-md outline-1 outline-gray-300">
+                  <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
+                  <p class="p-2">{{ formula.nome }}</p>
+                  <ul>
+                    @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
+                      <li 
+                        class="p-2 border-t border-gray-300" 
+                        [class.bg-red-100]="relatorio.ingredientesDiferentes.includes(ingrediente.codigo)"
+                      >
+                          {{ ingrediente.codigo }} - {{ ingrediente.nome }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+          </div>
+        </div>
+      }
+  </section>
+
+  <div class="flex justify-end gap-4">
+    <button swButton type="button" (click)="salvarResultado()">Salvar resultado</button>
   </div>
 }

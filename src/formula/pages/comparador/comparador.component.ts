@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { SweetmixInputComponent } from '@shared/components';
 import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
-import { Formula } from '@shared/models';
-import { FormulaService } from '@shared/services';
+import { Formula, Relatorio } from '@shared/models';
+import { ComparadorService, FormulaService, RelatorioService } from '@shared/services';
 
 @Component({
   imports: [
@@ -19,11 +20,12 @@ import { FormulaService } from '@shared/services';
 })
 export class ComparadorComponent implements OnInit {
   private formulaService = inject(FormulaService);
+  private comparadorService = inject(ComparadorService);
+  private relatorioService = inject(RelatorioService);
   private fb = inject(FormBuilder);
 
-  // codigo = signal('');
   formulasEncontradas = signal<Formula[]>([]);
-  formulasNaoEncontradas = signal<Formula[]>([]);
+  relatorios = signal<Relatorio[]>([]);
 
   form = this.fb.group({
     codigos: this.fb.array([this.criarElemento()]),
@@ -50,7 +52,7 @@ export class ComparadorComponent implements OnInit {
   }
 
   buscar(): void {
-    const codigos: string[] = this.codigos.value;
+    const codigos = (this.codigos.value as string[]).filter((codigo) => !!codigo);
     console.log('buscando por codigos', codigos);
     
     this.formulaService
@@ -61,5 +63,13 @@ export class ComparadorComponent implements OnInit {
       });
   }
 
-  comparar(): void {}
+  comparar(): void {
+    const relatorios = this.comparadorService.compararFormulas(this.formulasEncontradas());
+    this.relatorios.set(relatorios);
+    console.log('relatorios', relatorios);
+  }
+
+  salvarResultado(): void {
+    this.relatorioService.salvarRelatorios(this.relatorios()).subscribe();
+  }
 }
