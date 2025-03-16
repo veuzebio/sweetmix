@@ -1,2 +1,3 @@
 export * from './styling';
-export * from './auto-focus.directive';
+export * from './sweetmix-auto-focus.directive';
+export * from './sweetmix-navigate-on-init.directive';

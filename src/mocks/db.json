@@ -21,6 +21,17 @@
           "nome": "ingrediente 1"
         }
       ]
+    },
+    {
+      "id": "0e8f4a5b-6566-4723-8a79-bce485af8d96",
+      "codigo": "for3",
+      "nome": "formula 3",
+      "ingredientes": [
+        {
+          "codigo": "ing0",
+          "nome": "ingrediente 0"
+        }
+      ]
     }
   ],
   "resultados": [

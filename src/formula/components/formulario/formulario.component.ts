@@ -12,7 +12,7 @@ import {
 import { v4 as uuid } from 'uuid'
 
 import { SweetmixInputComponent } from '@shared/components';
-import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
+import { SweetmixAutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
 import { Formula, Ingrediente } from '@shared/models';
 import * as helper from '@shared/helpers';
 
@@ -27,7 +27,7 @@ import { ingredientesValidator } from './validators';
     CommonModule,
     SweetmixInputComponent,
     SweetmixButtonDirective,
-    AutoFocusDirective
+    SweetmixAutoFocusDirective
   ],
   templateUrl: 'formulario.component.html',
   styleUrl: 'formulario.component.css',

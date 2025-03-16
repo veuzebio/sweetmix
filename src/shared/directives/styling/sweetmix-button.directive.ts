@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject, Input } from '@angular/core';
 
 const BUTTON_BASE_CLASS = [
   'text-white',
@@ -13,6 +13,8 @@ const BUTTON_BASE_CLASS = [
   'w-fit',	
   'h-fit',	
   'text-center',
+  'disabled:cursor-not-allowed',
+  'disabled:opacity-50',
 ];
 
 const BUTTON_BLUE_CLASS = [

@@ -1,11 +1,25 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, DOCUMENT, ViewportScroller } from '@angular/common';
+import { Component, Directive, inject, Input, input, OnInit, signal } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import { SweetmixInputComponent } from '@shared/components';
-import { AutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
+import { SweetmixAutoFocusDirective, SweetmixButtonDirective, SweetmixNavigateOnInitDirective } from '@shared/directives';
 import { Formula, ResultadoAnalisePar } from '@shared/models';
 import { AnaliseCompatibilidadeService, FormulaService } from '@shared/services';
+
+export function codigosValidator(control: AbstractControl): ValidationErrors | null {
+  const codigosArray = control as FormArray;
+
+  if (codigosArray.length <= 0) {
+    return { required: true };
+  }
+
+  if (codigosArray.controls.filter((item) => item.value?.trim() !== '').length < 2) {
+    return { quantidadeMinima: true };
+  }
+
+  return null;
+}
 
 @Component({
   imports: [
@@ -14,7 +28,8 @@ import { AnaliseCompatibilidadeService, FormulaService } from '@shared/services'
     FormsModule,
     SweetmixInputComponent,
     SweetmixButtonDirective,
-    AutoFocusDirective
+    SweetmixAutoFocusDirective,
+    SweetmixNavigateOnInitDirective
   ],
   templateUrl: 'analise-compatibilidade.component.html',
 })
@@ -24,20 +39,26 @@ export class AnaliseCompatibilidadeComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   formulasEncontradas = signal<Formula[]>([]);
+  codigosNaoEncontrados = signal<string[]>([]);
   resultados = signal<ResultadoAnalisePar[]>([]);
 
   form = this.fb.group({
-    codigos: this.fb.array([this.criarElemento()]),
+    codigos: this.fb.array([this.criarElemento()], codigosValidator),
   });
 
   get codigos(): FormArray {
     return this.form.get('codigos') as FormArray;
   }
 
+  get codigosInvalidos(): boolean {
+    const erroDetectado = Object.keys(this.codigos.errors ?? {}).length > 0
+    return erroDetectado && this.form.touched;
+  }
+
   ngOnInit(): void {}
 
   criarElemento(): FormControl {
-    return this.fb.control('');
+    return this.fb.control('', Validators.required);
   }
   
   adicionarCodigo(): void {
@@ -51,14 +72,17 @@ export class AnaliseCompatibilidadeComponent implements OnInit {
   }
 
   buscar(): void {
+    this.resultados.set([]);
+
     const codigos = (this.codigos.value as string[]).filter((codigo) => !!codigo);
-    console.log('buscando por codigos', codigos);
     
     this.formulaService
       .obterFormulasPorCodigos(codigos)
       .subscribe((formulas) => {
-        console.log('formulas encontradas', formulas);
           this.formulasEncontradas.set(formulas);
+
+          const codigosNaoEncontrados = codigos.filter((codigo) => !formulas.map(formula => formula.codigo).includes(codigo));
+          this.codigosNaoEncontrados.set(codigosNaoEncontrados);
       });
   }
 
@@ -70,5 +94,14 @@ export class AnaliseCompatibilidadeComponent implements OnInit {
 
   salvarResultado(): void {
     this.analiseService.salvarResultadoAnalise(this.resultados()).subscribe();
+  }
+
+  limpar(): void {
+    this.formulasEncontradas.set([]);
+    this.codigosNaoEncontrados.set([]);
+    this.resultados.set([]);
+    this.form.reset();
+    this.codigos.clear();
+    this.adicionarCodigo();
   }
 }

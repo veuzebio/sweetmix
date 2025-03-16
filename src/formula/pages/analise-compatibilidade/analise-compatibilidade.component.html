@@ -1,85 +1,117 @@
 <h1 class="text-3xl mb-5">Análise de compatibilidade entre fórmulas</h1>
 
-<form [formGroup]="form">
-  <div formArrayName="codigos" class="mt-15 mb-5 px-4 pb-4 pt-6 rounded-md outline-1 outline-gray-300">
-    @for (codigo of codigos.controls; let i = $index; track codigo) {
-      <div class="flex gap-x-8">
-        <sw-input swAutoFocus class="flex-1" label="Código" formControlName="{{ i }}" (keydown.enter)="adicionarCodigo()" />
-        
-        @if (codigos.controls.length > 1) {
-          <button swButton color="red" type="button" tabindex="-1" (click)="removerCodigo(i)" >Remover</button>
-        }
-      </div>
-    }
-    <button swButton type="button" (click)="adicionarCodigo()">Adicionar</button>
-  </div>
-</form>
-
-<div class="flex justify-end gap-4">
-  <button swButton type="button" (click)="buscar()">Buscar</button>
-</div>
-
-@if (formulasEncontradas().length > 0) {
-  <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
-    <h2 class="text-xl">Formulas encontradas</h2>
-    <div class="flex gap-4 my-4">
-      @for (formula of formulasEncontradas(); track formula.id) {
-        <div class="rounded-md outline-1 outline-gray-300">
-          <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
-          <p class="p-2">{{ formula.nome }}</p>
-          <ul>
-            @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
-              <li class="p-2 border-t border-gray-300">{{ ingrediente.codigo }} - {{ ingrediente.nome }}</li>
-            }
-          </ul>
+<section>
+  <form [formGroup]="form">
+    <div 
+      formArrayName="codigos"
+      class="mt-15 mb-5 px-4 pb-4 pt-6 rounded-md outline-1 outline-gray-300" 
+      [class.outline-red-500]="codigosInvalidos"
+    >
+      @for (codigo of codigos.controls; let i = $index; track codigo) {
+        <div class="flex gap-x-8">
+          <sw-input swAutoFocus class="flex-1" formControlName="{{ i }}" label="Código" errorMessage="Campo obrigatório." (keydown.enter)="adicionarCodigo()" />
+          
+          @if (codigos.controls.length > 1) {
+            <button swButton color="red" type="button" tabindex="-1" (click)="removerCodigo(i)" >Remover</button>
+          }
         </div>
       }
+      <button swButton type="button"  (click)="adicionarCodigo()">Adicionar</button>
+
+      @if (codigosInvalidos) {
+        <p class="text-red-600 mt-4">Insira pelo menos dois códigos para realizar a análise.</p>
+      }
+    </div>
+  </form>
+  <div class="flex justify-end">
+    <button swButton type="button" [disabled]="codigosInvalidos || form.pristine" (click)="buscar()">Buscar</button>
+  </div>
+</section>
+
+@if (codigosNaoEncontrados().length > 0) {
+  <section swNavigateOnInit>
+    <div class="my-5 p-4 rounded-md outline-1 outline-gray-300">
+      <h2 swNavigateToAnchor class="text-xl">Formulas não encontradas</h2>
+      <ul class="flex gap-4 my-4">
+        @for (codigo of codigosNaoEncontrados(); track codigo) {
+          <li class="p-2 rounded-md outline-1 outline-red-500">{{ codigo }}</li>
+        }
+      </ul>
     </div>
   </section>
+}
 
-  <div class="flex justify-end gap-4">
-    <button swButton type="button" (click)="analisar()">Analisar compatibilidade</button>
-  </div>
+@if (formulasEncontradas().length > 0) {
+  <section swNavigateOnInit>
+    <div class="my-5 p-4 rounded-md outline-1 outline-gray-300">
+      <h2 swNavigateToAnchor class="text-xl">Formulas encontradas</h2>
+      <div class="flex gap-4 my-4">
+        @for (formula of formulasEncontradas(); track formula.id) {
+          <div class="rounded-md outline-1 outline-gray-300">
+            <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
+            <p class="p-2">{{ formula.nome }}</p>
+            <ul>
+              @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
+                <li class="p-2 border-t border-gray-300">{{ ingrediente.codigo }} - {{ ingrediente.nome }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    </div>
+    
+    <div class="flex justify-end gap-4">
+      <button swButton type="button" [disabled]="formulasEncontradas().length < 2" (click)="analisar()">Analisar compatibilidade</button>
+    </div>
+  </section>
 }
 
 @if (resultados().length > 0) {
-  <section class="mt-15 mb-5 p-4 rounded-md outline-1 outline-gray-300">
-    <h2 class="text-xl">Resultado</h2>
-      @for (resultado of resultados(); track resultado.id) {
-        <div 
-          class="mt-4 rounded-md outline-1 outline-green-800"
-          [class.outline-red-800]="!resultado.compatibilidade"
-        >
-          <h3 
-            class="text-lg text-green-800 rounded-t-md bg-green-100 p-4" 
-            [class.text-red-800]="!resultado.compatibilidade"
-            [class.bg-red-100]="!resultado.compatibilidade"
+  <section swNavigateOnInit>
+    <div class="my-5 p-4 rounded-md outline-1 outline-gray-300">
+      <h2 swNavigateToAnchor class="text-xl">Resultado</h2>
+        @for (resultado of resultados(); track resultado.id) {
+          <div 
+            class="mt-4 rounded-md outline-1 outline-green-800"
+            [class.outline-red-800]="!resultado.compatibilidade"
           >
-              {{ resultado.compatibilidade ? "Compatível" : "Incompatível" }}
-          </h3>
-          <div class="rounded-md flex gap-4 my-4 p-4">
-              @for (formula of resultado.formulasUtilizadas.values(); track formula) {
-                <div class="rounded-md outline-1 outline-gray-300">
-                  <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
-                  <p class="p-2">{{ formula.nome }}</p>
-                  <ul>
-                    @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
-                      <li 
-                        class="p-2 border-t border-gray-300" 
-                        [class.bg-red-100]="resultado.ingredientesDiferentes.includes(ingrediente.codigo)"
-                      >
-                          {{ ingrediente.codigo }} - {{ ingrediente.nome }}
-                      </li>
-                    }
-                  </ul>
-                </div>
-              }
+            <h3 
+              class="text-lg text-green-800 rounded-t-md bg-green-100 p-4" 
+              [class.text-red-800]="!resultado.compatibilidade"
+              [class.bg-red-100]="!resultado.compatibilidade"
+            >
+                {{ resultado.compatibilidade ? "Compatível" : "Incompatível" }}
+            </h3>
+            <div class="rounded-md flex gap-4 my-4 p-4">
+                @for (formula of resultado.formulasUtilizadas.values(); track formula) {
+                  <div class="rounded-md outline-1 outline-gray-300">
+                    <h3 class="bg-gray-300 p-2 rounded-t-md">{{ formula.codigo }}</h3>
+                    <p class="p-2">{{ formula.nome }}</p>
+                    <ul>
+                      @for (ingrediente of formula.ingredientes; track ingrediente.codigo) {
+                        <li 
+                          class="p-2 border-t border-gray-300" 
+                          [class.bg-red-100]="resultado.ingredientesDiferentes.includes(ingrediente.codigo)"
+                        >
+                            {{ ingrediente.codigo }} - {{ ingrediente.nome }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+            </div>
           </div>
-        </div>
-      }
+        }
+    </div>
+    
+    <div class="flex justify-end gap-4">
+      <button swButton type="button" (click)="salvarResultado()">Salvar resultado</button>
+    </div>
   </section>
+}
 
-  <div class="flex justify-end gap-4">
-    <button swButton type="button" (click)="salvarResultado()">Salvar resultado</button>
+@if (!form.pristine) {
+  <div class="my-5 flex justify-end">
+    <button swButton color="red" type="button" tabindex="-1" (click)="limpar()">Limpar</button>
   </div>
 }
