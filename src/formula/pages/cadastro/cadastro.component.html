@@ -1,6 +1,6 @@
 <h1 class="text-3xl mb-5">{{ formulaId() ? 'Editar fórmula' : 'Cadastrar nova fórmula'}}</h1>
 
-<for-formulario
+<for-formulario-cadastro
   [formula]="formulaSelecionada$ | async"
   (salvarAcionado)="salvar($event)"
   (voltarAcionado)="voltar()"

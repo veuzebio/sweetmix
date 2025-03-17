@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { v4 as uuid } from 'uuid'
 
-import { SweetmixInputComponent } from '@shared/components';
+import { SweeetmixIconEnterComponent, SweetmixInputComponent } from '@shared/components';
 import { SweetmixAutoFocusDirective, SweetmixButtonDirective } from '@shared/directives';
 import { Formula, Ingrediente } from '@shared/models';
 import * as helper from '@shared/helpers';
@@ -20,19 +20,19 @@ import { FormulaSalva, TipoFormulario } from '../../models';
 import { ingredientesValidator } from './validators';
 
 @Component({
-  selector: 'for-formulario',
+  selector: 'for-formulario-cadastro',
   imports: [
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
     SweetmixInputComponent,
     SweetmixButtonDirective,
-    SweetmixAutoFocusDirective
+    SweetmixAutoFocusDirective,
+    SweeetmixIconEnterComponent
   ],
-  templateUrl: 'formulario.component.html',
-  styleUrl: 'formulario.component.css',
+  templateUrl: 'formulario-cadastro.component.html',
 })
-export class FormularioComponent {
+export class FormularioCadastroComponent {
   private fb = inject(FormBuilder);
   private formulaEdicao: Formula | null = null;
   

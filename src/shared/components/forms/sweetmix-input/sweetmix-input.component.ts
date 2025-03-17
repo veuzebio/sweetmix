@@ -1,14 +1,16 @@
-import { booleanAttribute, Component, ElementRef, forwardRef, inject, input, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { booleanAttribute, Component, ElementRef, forwardRef, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { ControlContainer, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 
 import { SweetmixInputDirective, SweetmixLabelDirective } from '@shared/directives';
 import { Subscription } from 'rxjs';
 import { BaseControl } from '../base-control.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   imports: [
+    NgClass,
     SweetmixInputDirective, 
-    SweetmixLabelDirective
+    SweetmixLabelDirective,
   ],
   selector: 'sw-input',
   templateUrl: 'sweetmix-input.component.html',
@@ -34,8 +36,9 @@ export class SweetmixInputComponent extends BaseControl implements OnInit, OnDes
   label = input.required<string>();
   formControlName = input<string>('');
   errorMessage = input<string>('Valor inválido.');
-  
- 
+  usarDica = input<boolean>(false);
+  mostrarDica = signal<boolean>(false);
+
   get hasError(): boolean | null {     
     return this.errors && (this.touched || this.dirty);
   }

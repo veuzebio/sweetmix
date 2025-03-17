@@ -12,7 +12,12 @@
     @for (ingrediente of ingredientes.controls; let i = $index; track ingrediente) {
       <div [formGroupName]="i" class="grid grid-cols-10 gap-4 my-2">
         <sw-input swAutoFocus class="col-span-2" label="Código" formControlName="codigo" errorMessage="Campo obrigatório." />
-        <sw-input class="col-span-7" [class.col-span-8]="ingredientes.controls.length === 1" label="Nome" formControlName="nome" (keydown.enter)="adicionarIngrediente()" />
+        <sw-input class="col-span-7" [class.col-span-8]="ingredientes.controls.length === 1" label="Nome" formControlName="nome" (keydown.enter)="adicionarIngrediente()" >
+          <div class="flex gap-x-2" slot="dica">
+            <span> dica: aperte enter para adicionar </span>
+            <sw-icon-enter/>
+          </div>
+        </sw-input>
 
         @if (ingredientes.controls.length > 1) {
           <button swButton color="red" class="col-span-1" type="button" tabindex="-1" (click)="removerIngrediente(i)">Remover</button>

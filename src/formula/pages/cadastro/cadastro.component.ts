@@ -6,11 +6,11 @@ import { FormulaService } from '@shared/services';
 import { AvisoService } from '@shared/services/aviso.service';
 
 import { Observable } from 'rxjs';
-import { FormularioComponent } from '../../components';
+import { FormularioCadastroComponent } from '../../components';
 import { FormulaSalva } from '../../models';
 
 @Component({
-  imports: [CommonModule, FormularioComponent],
+  imports: [CommonModule, FormularioCadastroComponent],
   templateUrl: 'cadastro.component.html',
 })
 export class CadastroComponent implements OnInit {

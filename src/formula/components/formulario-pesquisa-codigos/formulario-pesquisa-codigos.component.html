@@ -1,0 +1,56 @@
+<form [formGroup]="form">
+  <div
+    formArrayName="codigos"
+    class="mt-15 mb-5 px-4 pb-4 pt-6 rounded-md outline-1 outline-gray-300"
+    [class.outline-red-500]="codigosInvalidos"
+  >
+    @for (codigo of codigos.controls; let i = $index; track codigo) {
+    <div class="flex gap-x-8">
+      <sw-input
+        swAutoFocus
+        class="flex-1"
+        formControlName="{{ i }}"
+        label="Código"
+        errorMessage="Campo obrigatório."
+        (keydown.enter)="adicionarCodigo()"
+      >
+        <div class="flex gap-x-2" slot="dica">
+          <span> dica: aperte enter para adicionar </span>
+          <sw-icon-enter />
+        </div>
+      </sw-input>
+
+      @if (codigos.controls.length > 1) {
+      <button
+        swButton
+        color="red"
+        type="button"
+        tabindex="-1"
+        (click)="removerCodigo(i)"
+      >
+        Remover
+      </button>
+      }
+    </div>
+    }
+    <button swButton type="button" (click)="adicionarCodigo()">
+      Adicionar
+    </button>
+
+    @if (codigosInvalidos) {
+    <p class="text-red-600 mt-4">
+      Insira pelo menos dois códigos para realizar a análise.
+    </p>
+    }
+  </div>
+</form>
+<div class="flex justify-end">
+  <button
+    swButton
+    type="button"
+    [disabled]="codigosInvalidos || form.pristine"
+    (click)="buscar()"
+  >
+    Buscar
+  </button>
+</div>

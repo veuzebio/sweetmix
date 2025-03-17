@@ -8,7 +8,8 @@
     [disabled]="disabled"
     [hasError]="hasError"
     [value]="value"
-    (input)="onInputChange($event)"
+    (input)="onInputChange($event); mostrarDica.set(true)"
+    (blur)="mostrarDica.set(false)"
   />
   <label for="input" swLabel [hasError]="hasError">
     {{ label() }}
@@ -19,4 +20,12 @@
       {{ errorMessage() }}
     </span>
   }
+
+
+  <div 
+    class="absolute top-11 right-0 text-xs text-gray-500 transition-opacity duration-1000"
+    [ngClass]="{'opacity-0': !mostrarDica(), 'opacity-100': usarDica() && mostrarDica()}"
+  >
+    <ng-content select="[slot='dica']"></ng-content>
+  </div>
 </div>
